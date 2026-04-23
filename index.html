@@ -303,15 +303,21 @@
                 flex-direction: column;
             }
         }
-#signaturePad {
-    width: 100%;
-    height: 200px;
-    border: 2px dashed #999;
-    border-radius: 8px;
-    background: white;
-    cursor: crosshair;
-    touch-action: none;  
-}
+        .checklist-item {
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #signaturePad {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #999;
+            border-radius: 8px;
+            background: white;
+            cursor: crosshair;
+            touch-action: none;  
+            display: block;
+        }
 
 /* 列印時邊框改成實線 */
 @media print {
@@ -336,15 +342,15 @@
             <div class="section">
                 <div class="section-header stop">停 STOP</div>
                 <div class="section-content">
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">作業前先停下來，觀察周遭環境</div>
                     </div>
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">確認工作範圍及動線</div>
                     </div>
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">檢查施工告示牌與安全標示是否清楚</div>
                     </div>
@@ -354,23 +360,23 @@
             <div class="section">
                 <div class="section-header think">想 THINK</div>
                 <div class="section-content">
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">今天的作業高度是否需防墜？安全帶、安全護欄是否完整？</div>
                     </div>
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">機具與電動工具是否檢查合格？電線是否破損？</div>
                     </div>
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">作業是否與其他工種交叉，動線是否會互相干擾？</div>
                     </div>
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">天氣狀況是否影響作業（雨天、強風、光線不足）？</div>
                     </div>
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">物料堆放是否穩固且不阻擋通道？</div>
                     </div>
@@ -382,15 +388,15 @@
             <div class="section">
                 <div class="section-header move">動 MOVE</div>
                 <div class="section-content">
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">確認所有安全措施到位後開始作業</div>
                     </div>
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">遵守施工計畫及安全作業程序</div>
                     </div>
-                    <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checklist-item" >
                         <div class="checkbox"></div>
                         <div class="item-text">保持與同仁溝通，隨時注意環境變化</div>
                     </div>
@@ -422,9 +428,10 @@
             </div>
         </div>
     </div>
+</body>
     
     <script>
-	    let hasSignature = false;
+
         // 設置今天的日期
         document.getElementById('date').valueAsDate = new Date();
         
@@ -441,6 +448,14 @@
             const percentage = (checkedItems / totalItems) * 100;
             document.getElementById('progress').style.width = percentage + '%';
         }
+
+        document.querySelectorAll('.checklist-item').forEach(item => {
+            item.addEventListener('click', function (e) {
+            // 避免簽名區或其他元素誤觸
+            if (e.target.closest('canvas')) return;
+            toggleCheck(this);
+            });
+        });
         
         function printChecklist() {
             // 確保所有輸入欄位都有值
@@ -484,74 +499,102 @@
         });
 
     const canvas = document.getElementById('signaturePad');
-    const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d');
 
-    let drawing = false;
-    let hasSignature = false;
+let drawing = false;
+let hasSignature = false;
+let lastX = 0;
+let lastY = 0;
 
-    function resizeCanvas() {
-        const rect = canvas.getBoundingClientRect();
+function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const tempImage = canvas.toDataURL();
 
-        // 保留原本簽名內容
-        const tempImage = canvas.toDataURL();
-	    
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-	    
-        const img = new Image();
-        img.onload = function () {
-            ctx.drawImage(img, 0, 0);
-        };
-        img.src = tempImage;
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    const img = new Image();
+    img.onload = function () {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+    img.src = tempImage;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function getPoint(e) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
+
+function lockPageScroll(lock) {
+    document.body.style.overflow = lock ? 'hidden' : '';
+    document.documentElement.style.overflow = lock ? 'hidden' : '';
+}
+
+function startDraw(e) {
+    e.preventDefault();
+
+    drawing = true;
+    lockPageScroll(true);
+
+    const p = getPoint(e);
+    lastX = p.x;
+    lastY = p.y;
+
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+
+    if (canvas.setPointerCapture) {
+        canvas.setPointerCapture(e.pointerId);
     }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+}
 
-    function startDraw(e) {
-        e.preventDefault(); // 手機
-        drawing = true;
-        ctx.beginPath();
-        ctx.moveTo(getX(e), getY(e));
+function draw(e) {
+    if (!drawing) return;
+    e.preventDefault();
+
+    const p = getPoint(e);
+
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    lastX = p.x;
+    lastY = p.y;
+    hasSignature = true;
+}
+
+function endDraw(e) {
+    if (!drawing) return;
+    drawing = false;
+    lockPageScroll(false);
+
+    if (canvas.releasePointerCapture) {
+        try {
+            canvas.releasePointerCapture(e.pointerId);
+        } catch (err) {}
     }
+}
 
-    function draw(e) {
-        if (!drawing) return;
-        e.preventDefault(); // 手機
-		
-        ctx.lineTo(getX(e), getY(e));
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
-        ctx.stroke();
+canvas.addEventListener('pointerdown', startDraw);
+canvas.addEventListener('pointermove', draw);
+canvas.addEventListener('pointerup', endDraw);
+canvas.addEventListener('pointercancel', endDraw);
+canvas.addEventListener('pointerleave', endDraw);
 
-        hasSignature = true;
-    }
-
-    function endDraw() {
-        drawing = false;
-    }
-
-    function getX(e) {
-        return (e.touches ? e.touches[0].clientX : e.clientX) - canvas.getBoundingClientRect().left;
-    }
-
-    function getY(e) {
-        return (e.touches ? e.touches[0].clientY : e.clientY) - canvas.getBoundingClientRect().top;
-    }
-
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', endDraw);
-    canvas.addEventListener('mouseleave', endDraw);
-
-    canvas.addEventListener('touchstart', startDraw, { passive: false });
-    canvas.addEventListener('touchmove', draw, { passive: false });
-    canvas.addEventListener('touchend', endDraw);
-
-    function clearSignature() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        hasSignature = false;
-    }
+function clearSignature() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasSignature = false;
+}
 	
 	async function savePDF() {
         const inspector = document.getElementById('inspector').value;
@@ -621,5 +664,4 @@
     }
 
     </script>
-</body>
 </html>
