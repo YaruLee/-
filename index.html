@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -308,6 +310,7 @@
     border-radius: 8px;
     background: white;
     cursor: crosshair;
+    touch-action: none;  
 }
 
 /* 列印時邊框改成實線 */
@@ -414,12 +417,14 @@
                 <canvas id="signaturePad"></canvas>
                 <div style="margin-top:10px;">
                     <button class="print-btn" type="button" onclick="clearSignature()">清除簽名</button>
+					<button class="print-btn" type="button" onclick="savePDF()">儲存成PDF</button>
                 </div>
             </div>
         </div>
     </div>
     
     <script>
+	    let hasSignature = false;
         // 設置今天的日期
         document.getElementById('date').valueAsDate = new Date();
         
@@ -456,13 +461,13 @@
             
             // 列印頁面
 
-            const pixelData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-const hasSignature = pixelData.some(channel => channel !== 0);
+            //const pixelData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+            //const hasSignature = pixelData.some(channel => channel !== 0);
 
-if (!hasSignature) {
-    alert('請先手寫簽名');
-    return;
-}
+            if (!hasSignature) {
+                alert('請先手寫簽名');
+                return;
+            }
 
             window.print();
         }
@@ -482,16 +487,28 @@ if (!hasSignature) {
     const ctx = canvas.getContext('2d');
 
     let drawing = false;
+    let hasSignature = false;
 
     function resizeCanvas() {
         const rect = canvas.getBoundingClientRect();
+
+        // 保留原本簽名內容
+        const tempImage = canvas.toDataURL();
+	    
         canvas.width = rect.width;
         canvas.height = rect.height;
+	    
+        const img = new Image();
+        img.onload = function () {
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = tempImage;
     }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
     function startDraw(e) {
+        e.preventDefault(); // 手機
         drawing = true;
         ctx.beginPath();
         ctx.moveTo(getX(e), getY(e));
@@ -499,11 +516,15 @@ if (!hasSignature) {
 
     function draw(e) {
         if (!drawing) return;
+        e.preventDefault(); // 手機
+		
         ctx.lineTo(getX(e), getY(e));
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 2;
         ctx.lineCap = 'round';
         ctx.stroke();
+
+        hasSignature = true;
     }
 
     function endDraw() {
@@ -523,12 +544,80 @@ if (!hasSignature) {
     canvas.addEventListener('mouseup', endDraw);
     canvas.addEventListener('mouseleave', endDraw);
 
-    canvas.addEventListener('touchstart', startDraw);
-    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
     canvas.addEventListener('touchend', endDraw);
 
     function clearSignature() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        hasSignature = false;
+    }
+	
+	async function savePDF() {
+        const inspector = document.getElementById('inspector').value;
+        const date = document.getElementById('date').value;
+    
+        if (!inspector.trim()) {
+            alert('請填寫檢查人員姓名');
+            document.getElementById('inspector').focus();
+            return;
+        }
+    
+        if (!date) {
+            alert('請選擇檢查日期');
+            document.getElementById('date').focus();
+            return;
+        }
+    
+        if (!hasSignature) {
+            alert('請先手寫簽名');
+            return;
+        }
+    
+        const { jsPDF } = window.jspdf;
+    
+        const target = document.querySelector('.container');
+        const printButtons = document.querySelectorAll('.print-btn');
+    
+        // 匯出前先隱藏按鈕
+        printButtons.forEach(btn => btn.style.display = 'none');
+    
+        try {
+            const canvasImage = await html2canvas(target, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            });
+    
+            const imgData = canvasImage.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+    
+            const pageWidth = 210;
+            const pageHeight = 297;
+            const imgWidth = pageWidth - 10;
+            const imgHeight = canvasImage.height * imgWidth / canvasImage.width;
+    
+            let heightLeft = imgHeight;
+            let position = 5;
+    
+            pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+            heightLeft -= (pageHeight - 10);
+    
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight + 5;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+                heightLeft -= (pageHeight - 10);
+            }
+    
+            pdf.save(`施工現場職安檢查表_${inspector}_${date}.pdf`);
+        } catch (error) {
+            console.error(error);
+            alert('PDF 產生失敗，請稍後再試');
+        } finally {
+            // 匯出後再顯示按鈕
+            printButtons.forEach(btn => btn.style.display = '');
+        }
     }
 
     </script>
