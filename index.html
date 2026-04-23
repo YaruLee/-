@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>施工現場職安檢查表 - 停、想、動</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.1) 10px,
+                rgba(255,255,255,0.1) 20px
+            );
+            animation: move 20s linear infinite;
+        }
+        
+        @keyframes move {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 35px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
+        
+        .section-header {
+            font-size: 1.6em;
+            font-weight: bold;
+            padding: 20px 25px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1));
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .section:hover .section-header::before {
+            transform: translateX(100%);
+        }
+        
+        .stop { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .think { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .report { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .move { background: linear-gradient(135deg, #27ae60, #229954); }
+        
+        .section-content {
+            padding: 25px;
+            background: #f8f9fa;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .checklist-item:hover {
+            border-left-color: #3498db;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .checklist-item.checked {
+            background: #e8f5e8;
+            border-left-color: #27ae60;
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 15px;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox.checked {
+            background: #27ae60;
+            border-color: #27ae60;
+            color: white;
+        }
+        
+        .checkbox::after {
+            content: '✓';
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .checkbox.checked::after {
+            opacity: 1;
+        }
+        
+        .item-text {
+            flex: 1;
+            line-height: 1.6;
+            font-size: 1.05em;
+        }
+        
+        .signature-section {
+            background: #f1f2f6;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .signature-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .signature-field {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .signature-field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .signature-field input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+        
+        .signature-field input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .print-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .print-btn {
+                display: none;
+            }
+            
+            .section {
+                break-inside: avoid;
+                box-shadow: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .signature-row {
+                flex-direction: column;
+            }
+        }
+#signaturePad {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #999;
+    border-radius: 8px;
+    background: white;
+    cursor: crosshair;
+}
+
+/* 列印時邊框改成實線 */
+@media print {
+    #signaturePad {
+        border: 1px solid #000;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>施工現場職安檢查表</h1>
+            <p class="subtitle">停、想、動 安全作業程序</p>
+        </div>
+        
+        <div class="content">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header stop">停 STOP</div>
+                <div class="section-content">
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">作業前先停下來，觀察周遭環境</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">確認工作範圍及動線</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">檢查施工告示牌與安全標示是否清楚</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header think">想 THINK</div>
+                <div class="section-content">
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">今天的作業高度是否需防墜？安全帶、安全護欄是否完整？</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">機具與電動工具是否檢查合格？電線是否破損？</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">作業是否與其他工種交叉，動線是否會互相干擾？</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">天氣狀況是否影響作業（雨天、強風、光線不足）？</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">物料堆放是否穩固且不阻擋通道？</div>
+                    </div>
+                </div>
+            </div>
+            
+
+            
+            <div class="section">
+                <div class="section-header move">動 MOVE</div>
+                <div class="section-content">
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">確認所有安全措施到位後開始作業</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">遵守施工計畫及安全作業程序</div>
+                    </div>
+                    <div class="checklist-item" onclick="toggleCheck(this)">
+                        <div class="checkbox"></div>
+                        <div class="item-text">保持與同仁溝通，隨時注意環境變化</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="signature-section">
+                <h3>檢查紀錄</h3>
+                <div class="signature-row">
+                    <div class="signature-field">
+                        <label for="inspector">檢查人員簽名：</label>
+                        <input type="text" id="inspector" placeholder="請輸入檢查人員姓名">
+                    </div>
+                    <div class="signature-field">
+                        <label for="date">檢查日期：</label>
+                        <input type="date" id="date">
+                    </div>
+                </div>
+                <button class="print-btn" onclick="printChecklist()">📄 列印檢查表</button>
+            </div>
+
+            <div class="signature-field">
+                <label>手寫簽名：</label>
+                <canvas id="signaturePad"></canvas>
+                <div style="margin-top:10px;">
+                    <button class="print-btn" type="button" onclick="clearSignature()">清除簽名</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 設置今天的日期
+        document.getElementById('date').valueAsDate = new Date();
+        
+        function toggleCheck(item) {
+            const checkbox = item.querySelector('.checkbox');
+            checkbox.classList.toggle('checked');
+            item.classList.toggle('checked');
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            const totalItems = document.querySelectorAll('.checklist-item').length;
+            const checkedItems = document.querySelectorAll('.checklist-item.checked').length;
+            const percentage = (checkedItems / totalItems) * 100;
+            document.getElementById('progress').style.width = percentage + '%';
+        }
+        
+        function printChecklist() {
+            // 確保所有輸入欄位都有值
+            const inspector = document.getElementById('inspector').value;
+            const date = document.getElementById('date').value;
+            
+            if (!inspector.trim()) {
+                alert('請填寫檢查人員姓名');
+                document.getElementById('inspector').focus();
+                return;
+            }
+            
+            if (!date) {
+                alert('請選擇檢查日期');
+                document.getElementById('date').focus();
+                return;
+            }
+            
+            // 列印頁面
+
+            const pixelData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+const hasSignature = pixelData.some(channel => channel !== 0);
+
+if (!hasSignature) {
+    alert('請先手寫簽名');
+    return;
+}
+
+            window.print();
+        }
+        
+        // 初始化進度條
+        updateProgress();
+        
+        // 添加鍵盤快捷鍵支援
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                printChecklist();
+            }
+        });
+
+    const canvas = document.getElementById('signaturePad');
+    const ctx = canvas.getContext('2d');
+
+    let drawing = false;
+
+    function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    function startDraw(e) {
+        drawing = true;
+        ctx.beginPath();
+        ctx.moveTo(getX(e), getY(e));
+    }
+
+    function draw(e) {
+        if (!drawing) return;
+        ctx.lineTo(getX(e), getY(e));
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+    }
+
+    function endDraw() {
+        drawing = false;
+    }
+
+    function getX(e) {
+        return (e.touches ? e.touches[0].clientX : e.clientX) - canvas.getBoundingClientRect().left;
+    }
+
+    function getY(e) {
+        return (e.touches ? e.touches[0].clientY : e.clientY) - canvas.getBoundingClientRect().top;
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', endDraw);
+    canvas.addEventListener('mouseleave', endDraw);
+
+    canvas.addEventListener('touchstart', startDraw);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', endDraw);
+
+    function clearSignature() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    </script>
+</body>
+</html>
