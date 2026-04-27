@@ -555,7 +555,6 @@
                 <span class="icon">📋</span> 材料規格與人員資格
             </div>
             <div class="section-content">
-
                 <div class="checklist-item" data-id="1">
                     <div class="item-num">1</div>
                     <div class="checkbox"></div>
@@ -567,7 +566,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
                 <div class="checklist-item" data-id="2">
                     <div class="item-num">2</div>
                     <div class="checkbox"></div>
@@ -579,7 +577,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
                 <div class="checklist-item" data-id="12">
                     <div class="item-num">12</div>
                     <div class="checkbox"></div>
@@ -591,7 +588,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
             </div>
         </div>
 
@@ -601,7 +597,6 @@
                 <span class="icon">🔩</span> 基礎、結構與連接
             </div>
             <div class="section-content">
-
                 <div class="checklist-item" data-id="3">
                     <div class="item-num">3</div>
                     <div class="checkbox"></div>
@@ -613,7 +608,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
                 <div class="checklist-item" data-id="4">
                     <div class="item-num">4</div>
                     <div class="checkbox"></div>
@@ -625,7 +619,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
                 <div class="checklist-item" data-id="7">
                     <div class="item-num">7</div>
                     <div class="checkbox"></div>
@@ -637,7 +630,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
                 <div class="checklist-item" data-id="10">
                     <div class="item-num">10</div>
                     <div class="checkbox"></div>
@@ -649,7 +641,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
             </div>
         </div>
 
@@ -659,7 +650,6 @@
                 <span class="icon">🦺</span> 安全設施與防墜措施
             </div>
             <div class="section-content">
-
                 <div class="checklist-item" data-id="5">
                     <div class="item-num">5</div>
                     <div class="checkbox"></div>
@@ -671,7 +661,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
                 <div class="checklist-item" data-id="6">
                     <div class="item-num">6</div>
                     <div class="checkbox"></div>
@@ -683,7 +672,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
                 <div class="checklist-item" data-id="8">
                     <div class="item-num">8</div>
                     <div class="checkbox"></div>
@@ -695,7 +683,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
                 <div class="checklist-item" data-id="9">
                     <div class="item-num">9</div>
                     <div class="checkbox"></div>
@@ -707,7 +694,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
                 <div class="checklist-item" data-id="11">
                     <div class="item-num">11</div>
                     <div class="checkbox"></div>
@@ -719,7 +705,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
             </div>
         </div>
 
@@ -971,6 +956,7 @@
             try { canvas.setPointerCapture(e.pointerId); } catch(err) {}
         }
     }
+
     function draw(e) {
         if (!drawing) return;
         e.preventDefault();
@@ -980,6 +966,7 @@
         ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
         lastX = p.x; lastY = p.y; hasSignature = true;
     }
+    
     function endDraw(e) {
         if (!drawing) return;
         drawing = false;

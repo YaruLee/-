@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FY-1B015 氧乙炔作業安全圖示檢查表</title>
+    <title>FY-1B019 臨時電箱安全圖示檢查表</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -464,9 +464,9 @@
     <!-- Header -->
     <div class="header">
         <p class="company">豐譽聯合工程股份有限公司 ＆ 豐譽營造股份有限公司</p>
-        <h1>🔥 氧乙炔作業安全圖示檢查表</h1>
-        <p class="subtitle">Safety Illustrated Checklist / Oxyacetylene Operations</p>
-        <p class="doc-id">表單編號：FY-1B015 ｜ 第 1 版 ｜ 機密等級：管制使用</p>
+        <h1>⚡ 臨時電箱安全圖示每月檢查表</h1>
+        <p class="subtitle">Temporary Electrical Box Safety Sign Checklist</p>
+        <p class="doc-id">表單編號：FY-1B019 ｜ 第 1 版 ｜ 機密等級：管制使用</p>
     </div>
 
     <div class="content">
@@ -501,9 +501,9 @@
 
         <!-- Diagram notice -->
         <div class="diagram-notice">
-            <strong>🔥 氧乙炔規範重點</strong>
-            作業區域10公尺內不得有易燃物<br>
-            氧氣瓶與乙炔瓶分開存放（至少3公尺以上）。
+            <strong>⚡ 臨時電箱規範重點</strong>
+            配電箱是否上鎖管理<br>
+            裝設高速、高敏感(電流30mA，跳脫時間0.1秒以內)。
         </div>
 
 
@@ -514,7 +514,7 @@
                 <span>檢 查 圖 示</span>
             </div>
             <div class="diagram-body">
-                <img src="./image/FY-1B015_1.png" alt="氧乙炔作業詳圖" style="max-width: 100%;">
+                <img src="./image/FY-1B019_1.png" alt="臨時電箱詳圖" style="max-width: 100%;">
                 <div class="diagram-labels">
                     <div class="label-title">圖示對應說明</div>
                     <div class="label-grid">
@@ -529,8 +529,9 @@
                         <span class="lbl"><b>09</b> 監火人員</span>
                     </div>
                     <div class="dim-badges">
-                        <span class="badge orange">作業區域10公尺內不得有易燃物</span>
-                        <span class="badge blue">氧氣瓶與乙炔瓶分開存放（至少3公尺以上）</span>
+                        <span class="badge orange">配電箱是否上鎖管理</span>
+                        <span class="badge blue">設高速、高敏感(電流30mA，跳脫時間0.1秒以內)</span>
+                        <span class="badge green">配電箱接地是否符合要求</span>
                     </div>
                 </div>
             </div>
@@ -546,16 +547,16 @@
         <!-- Validation message -->
         <div class="validation-msg" id="validationMsg"></div>
 
-        <!-- Section 1: 作業申請與管制 -->
+        <!-- Section 1: 一般管理 -->
         <div class="section">
             <div class="section-header blue">
-                <span class="icon">📋</span> 作業申請與管制
+                <span class="icon">📋</span> 一般管理
             </div>
             <div class="section-content">
                 <div class="checklist-item" data-id="1">
                     <div class="item-num">1</div>
                     <div class="checkbox"></div>
-                    <div class="item-text">動火作業前是否已完成動火作業申請。</div>
+                    <div class="item-text">配電箱是否上鎖管理</div>
                     <div class="result-btns">
                         <div class="rbtn ok" title="合格">✓</div>
                         <div class="rbtn fail" title="不合格">✗</div>
@@ -563,61 +564,42 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-            </div>
-        </div>
-
-        <!-- Section 2: 鋼瓶存放與設備狀況 -->
-        <div class="section">
-            <div class="section-header orange">
-                <span class="icon">🛢️</span> 鋼瓶存放與設備狀況
-            </div>
-            <div class="section-content">
                 <div class="checklist-item" data-id="2">
                     <div class="item-num">2</div>
                     <div class="checkbox"></div>
-                    <div class="item-text">鋼瓶是否置於通風陰涼處，且遠離高溫、電氣及日曬。</div>
+                    <div class="item-text">警告標語是否具備雙語</div>
                     <div class="result-btns">
-                        <div class="rbtn ok">✓</div>
-                        <div class="rbtn fail">✗</div>
-                        <div class="rbtn na">／</div>
+                        <div class="rbtn ok" title="合格">✓</div>
+                        <div class="rbtn fail" title="不合格">✗</div>
+                        <div class="rbtn na" title="無此項">／</div>
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
                 <div class="checklist-item" data-id="3">
                     <div class="item-num">3</div>
                     <div class="checkbox"></div>
-                    <div class="item-text">流量計、壓力調整器是否良好無損壞、洩漏，且乙炔使用中壓力</br>不得超過表壓力每平方公分1.3公斤。</div>
+                    <div class="item-text">箱體是否無損壞、腐蝕</div>
                     <div class="result-btns">
-                        <div class="rbtn ok">✓</div>
-                        <div class="rbtn fail">✗</div>
-                        <div class="rbtn na">／</div>
+                        <div class="rbtn ok" title="合格">✓</div>
+                        <div class="rbtn fail" title="不合格">✗</div>
+                        <div class="rbtn na" title="無此項">／</div>
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-                <div class="checklist-item" data-id="7">
-                    <div class="item-num">7</div>
-                    <div class="checkbox"></div>
-                    <div class="item-text">鋼瓶是否採手推車搬運並固定，且配置滅火器及「嚴禁煙火」之標示。</div>
-                    <div class="result-btns">
-                        <div class="rbtn ok">✓</div>
-                        <div class="rbtn fail">✗</div>
-                        <div class="rbtn na">／</div>
-                    </div>
-                </div>
-                <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
+
             </div>
         </div>
 
-        <!-- Section 3: 管路、皮管與回火裝置 -->
+        <!-- Section 2: 感電防止 -->
         <div class="section">
-            <div class="section-header teal">
-                <span class="icon">🔧</span> 管路、皮管與回火裝置
+            <div class="section-header orange">
+                <span class="icon">⚡</span> 感電防止
             </div>
             <div class="section-content">
                 <div class="checklist-item" data-id="4">
                     <div class="item-num">4</div>
                     <div class="checkbox"></div>
-                    <div class="item-text">氧乙炔皮管是否均裝設防止回火裝置。</div>
+                    <div class="item-text">中隔板是否設置與正常開關並具備配電圖。</div>
                     <div class="result-btns">
                         <div class="rbtn ok">✓</div>
                         <div class="rbtn fail">✗</div>
@@ -628,7 +610,7 @@
                 <div class="checklist-item" data-id="5">
                     <div class="item-num">5</div>
                     <div class="checkbox"></div>
-                    <div class="item-text">皮管是否無老化龜裂、燒焦、耗損、破裂等情形。</div>
+                    <div class="item-text">漏電斷路器是否裝設高速、高敏感(電流30mA，跳脫時間0.1秒以內)。</div>
                     <div class="result-btns">
                         <div class="rbtn ok">✓</div>
                         <div class="rbtn fail">✗</div>
@@ -636,19 +618,21 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-            </div>
-        </div>
-
-        <!-- Section 4: 現場環境安全與人員防護 -->
-        <div class="section">
-            <div class="section-header teal">
-                <span class="icon">🦺</span> 現場環境安全與人員防護
-            </div>
-            <div class="section-content">
                 <div class="checklist-item" data-id="6">
                     <div class="item-num">6</div>
                     <div class="checkbox"></div>
-                    <div class="item-text">動火範圍2M內及火星可能落下處是否淨空，且易燃物是否清除或採取保護措施，以及設置警告標示或派監視人員。</div>
+                    <div class="item-text">各線路是否無破損。</div>
+                    <div class="result-btns">
+                        <div class="rbtn ok">✓</div>
+                        <div class="rbtn fail">✗</div>
+                        <div class="rbtn na">／</div>
+                    </div>
+                </div>
+                <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
+                <div class="checklist-item" data-id="7">
+                    <div class="item-num">7</div>
+                    <div class="checkbox"></div>
+                    <div class="item-text">是否有不合格接線安裝。</div>
                     <div class="result-btns">
                         <div class="rbtn ok">✓</div>
                         <div class="rbtn fail">✗</div>
@@ -659,7 +643,7 @@
                 <div class="checklist-item" data-id="8">
                     <div class="item-num">8</div>
                     <div class="checkbox"></div>
-                    <div class="item-text">作業時是否佩戴防護眼鏡、防護手套等防護具。</div>
+                    <div class="item-text">配電箱接地是否符合要求。</div>
                     <div class="result-btns">
                         <div class="rbtn ok">✓</div>
                         <div class="rbtn fail">✗</div>
@@ -667,18 +651,6 @@
                     </div>
                 </div>
                 <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-                <div class="checklist-item" data-id="9">
-                    <div class="item-num">9</div>
-                    <div class="checkbox"></div>
-                    <div class="item-text">作業時是否指派監火人員，在旁負責安全、消防及緊急應變。</div>
-                    <div class="result-btns">
-                        <div class="rbtn ok">✓</div>
-                        <div class="rbtn fail">✗</div>
-                        <div class="rbtn na">／</div>
-                    </div>
-                </div>
-                <div class="notes-row"><textarea placeholder="缺失改善措施…"></textarea></div>
-
             </div>
         </div>
 
