@@ -34,21 +34,6 @@
             position: relative;
             overflow: hidden;
         }
-        /* .header::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: repeating-linear-gradient(
-                45deg, transparent, transparent 10px,
-                rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px
-            );
-            animation: move 20s linear infinite;
-        } */
-        @keyframes move {
-            0%   { transform: translate(-50%,-50%) rotate(0deg); }
-            100% { transform: translate(-50%,-50%) rotate(360deg); }
-        }
         .header .company {
             font-size: 0.95em;
             opacity: 0.9;
@@ -152,16 +137,7 @@
             padding: 16px 22px;
             color: white;
             display: flex; align-items: center; gap: 10px;
-            position: relative; overflow: hidden;
         }
-        .section-header::before {
-            content: '';
-            position: absolute; inset: 0;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1));
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-        .section:hover .section-header::before { transform: translateX(100%); }
         .section-header .icon { font-size: 1.3em; }
 
         .blue   { background: linear-gradient(135deg, #1565c0, #1976d2); }
@@ -180,14 +156,17 @@
             border-radius: 8px;
             border-left: 4px solid #ddd;
             transition: all 0.3s ease;
-            cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
         .checklist-item:last-child { margin-bottom: 0; }
-        .checklist-item:hover { border-left-color: #1976d2; box-shadow: 0 4px 12px rgba(0,0,0,0.07); }
         .checklist-item.checked { background: #e8f5e9; border-left-color: #2e7d32; }
+        /* 未選結果時高亮提示 */
+        .checklist-item.needs-result {
+            border-left-color: #e53935 !important;
+            background: #fff8f8 !important;
+        }
 
         .item-num {
             min-width: 26px; height: 26px;
@@ -214,7 +193,7 @@
         .checkbox::after { content: '✓'; opacity: 0; transition: opacity 0.3s; }
         .checkbox.checked::after { opacity: 1; }
 
-        .item-text { flex: 1; line-height: 1.65; font-size: 1em; color: #333; }
+        .item-text { flex: 1; line-height: 1.65; font-size: 1em; color: #333; min-width: 0; }
 
         /* ── Result radio buttons ── */
         .result-btns {
@@ -222,12 +201,14 @@
             margin-left: 10px; flex-shrink: 0; align-self: flex-start; padding-top: 2px;
         }
         .rbtn {
-            width: 30px; height: 30px; border-radius: 50%;
+            width: 32px; height: 32px; border-radius: 50%;
             border: 2px solid #ddd;
             font-size: 0.9em; font-weight: bold;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: all 0.2s;
             background: white;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         .rbtn:hover { transform: scale(1.1); }
         .rbtn.ok     { border-color: #2e7d32; }
@@ -256,6 +237,20 @@
         }
         .notes-row textarea:focus { outline: none; border-color: #c62828; }
         .notes-row textarea::placeholder { color: #bbb; }
+
+        /* ── Validation warning ── */
+        .validation-msg {
+            display: none;
+            background: #fff3e0;
+            border: 2px solid #ffa726;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            color: #e65100;
+            font-size: 0.92em;
+            line-height: 1.6;
+        }
+        .validation-msg.show { display: block; }
 
         /* ── Signature section ── */
         .signature-section {
@@ -322,14 +317,61 @@
             .print-btn { display: none; }
             .section { break-inside: avoid; box-shadow: none; }
             #signaturePad { border: 1px solid #000; }
+            .validation-msg { display: none !important; }
         }
+
+        /* ── Mobile ── */
         @media (max-width: 768px) {
-            .content { padding: 20px; }
-            .header { padding: 20px; }
-            .header h1 { font-size: 1.6em; }
+            .content { padding: 16px; }
+            .header { padding: 20px 16px; }
+            .header h1 { font-size: 1.4em; }
             .meta-grid { grid-template-columns: 1fr; }
             .signature-row { flex-direction: column; }
-            .result-btns { display: none; }
+
+            /* 手機版 result-btns 換行顯示在文字下方 */
+            .checklist-item {
+                flex-wrap: wrap;
+                padding: 12px 10px;
+            }
+            .item-text {
+                width: calc(100% - 80px);
+                margin-bottom: 8px;
+            }
+            .result-btns {
+                margin-left: auto;
+                margin-right: 0;
+                flex-shrink: 0;
+                /* 不隱藏，保持顯示 */
+                display: flex !important;
+                gap: 8px;
+                padding-top: 0;
+                align-self: flex-start;
+            }
+            .rbtn {
+                width: 36px;
+                height: 36px;
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checklist-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .item-num { margin-right: 0; }
+            .item-text { width: 100%; margin-bottom: 0; }
+            .result-btns {
+                margin-left: 0;
+                align-self: flex-start;
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .rbtn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1em;
+            }
         }
 
         /* ── Diagram section ── */
@@ -403,6 +445,17 @@
             .scaffold-img { width: 100%; border-right: none; border-bottom: 1px solid #e0e0e0; }
             .label-grid { grid-template-columns: 1fr; }
         }
+
+        /* ── Field error highlight ── */
+        .field-error {
+            border-color: #e53935 !important;
+            background: #fff8f8 !important;
+            outline: none;
+        }
+        .field-error:focus {
+            border-color: #e53935 !important;
+            box-shadow: 0 0 0 3px rgba(229,57,53,0.15) !important;
+        }
     </style>
 </head>
 <body>
@@ -465,18 +518,21 @@
                 <div class="diagram-labels">
                     <div class="label-title">圖示對應說明</div>
                     <div class="label-grid">
-                        <span class="lbl"><b>01</b> 固定型基腳座鈑／墊板</span>
-                        <span class="lbl"><b>02</b> 橫擋</span>
-                        <span class="lbl"><b>03</b> 腳踏桁</span>
-                        <span class="lbl"><b>04</b> 載重標示</span>
-                        <span class="lbl"><b>05</b> 踏板（滿鋪）</span>
-                        <span class="lbl"><b>06</b> 交叉拉桿</span>
-                        <span class="lbl"><b>07</b> 下拉桿</span>
-                        <span class="lbl"><b>08</b> 上下設備（梯子）</span>
-                        <span class="lbl"><b>09</b> 護欄／扶手先行框</span>
-                        <span class="lbl"><b>10</b> 連牆材（垂直≦5.5M）</span>
-                        <span class="lbl"><b>11</b> 安全網／補助板料</span>
-                        <span class="lbl"><b>12</b> 萬向接頭</span>
+                        <span class="lbl"><b>01</b> 個人防護具</span>
+                        <span class="lbl"><b>02</b> 強風大雨</span>
+                        <span class="lbl"><b>03</b> 操作手行為</span>
+                        <span class="lbl"><b>04</b> 移動式起重機檢查</span>
+                        <span class="lbl"><b>05</b> 塔吊一機三證檢查</span>
+                        <span class="lbl"><b>06</b> 攀登梯</span>
+                        <span class="lbl"><b>07</b> 吊具檢查</span>
+                        <span class="lbl"><b>08</b> 過捲揚預防</span>
+                        <span class="lbl"><b>09</b> 防滑舌片檢查</span>
+                        <span class="lbl"><b>10</b> 額定荷重檢查</span>
+                        <span class="lbl"><b>11</b> 作業半徑圈圍</span>
+                        <span class="lbl"><b>12</b> 桁架、伸臂結構</span>
+                        <span class="lbl"><b>13</b> 制動裝置等機械性能</span>
+                        <span class="lbl"><b>14</b> 分電盤檢查</span>
+                        <span class="lbl"><b>15</b> 漏電斷路器檢查</span>
                     </div>
                     <div class="dim-badges">
                         <span class="badge orange">垂直向 ≦ 5.5 M</span>
@@ -745,56 +801,173 @@
 
     const TOTAL = document.querySelectorAll('.checklist-item').length;
 
-    function updateProgress() {
-        const checked = document.querySelectorAll('.checklist-item.checked').length;
-        const pct = (checked / TOTAL) * 100;
-        document.getElementById('progress').style.width = pct + '%';
-        document.getElementById('progressText').textContent = `${checked} / ${TOTAL} 項已確認`;
+    // 統計「已選結果」的項目數
+    function countWithResult() {
+        let count = 0;
+        document.querySelectorAll('.checklist-item').forEach(item => {
+            const active = item.querySelector('.rbtn.active');
+            if (active) count++;
+        });
+        return count;
     }
 
-    // Toggle check on item click (not on result buttons / textarea)
-    document.querySelectorAll('.checklist-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-            if (e.target.closest('.result-btns') || e.target.closest('canvas')) return;
-            const cb = this.querySelector('.checkbox');
-            cb.classList.toggle('checked');
-            this.classList.toggle('checked');
-            updateProgress();
-        });
-    });
+    function updateProgress() {
+        const count = countWithResult();
+        const pct = (count / TOTAL) * 100;
+        document.getElementById('progress').style.width = pct + '%';
+        document.getElementById('progressText').textContent = `${count} / ${TOTAL} 項已選擇結果`;
+    }
 
-    // Result buttons
+    // 左側 checkbox 為被動狀態，不可直接點擊
+    // 只有點擊右側結果按鈕（✓/✗/／）才會觸發狀態
+    // （不需要任何 click 監聽）
+
+    // Result buttons — 唯一觸發 checkbox 的方式
     document.querySelectorAll('.result-btns').forEach(btns => {
         btns.querySelectorAll('.rbtn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const siblings = this.parentElement.querySelectorAll('.rbtn');
+                const wasActive = this.classList.contains('active');
+
+                // 先全部取消
                 siblings.forEach(s => s.classList.remove('active'));
-                this.classList.add('active');
 
-                // Show notes row only for fail
                 const item = this.closest('.checklist-item');
+                const cb = item.querySelector('.checkbox');
                 const notesRow = item.nextElementSibling;
-                if (notesRow && notesRow.classList.contains('notes-row')) {
-                    notesRow.classList.toggle('show', this.classList.contains('fail'));
+
+                if (wasActive) {
+                    // 再次點同一個 → 取消選擇
+                    item.classList.remove('checked');
+                    cb.classList.remove('checked');
+                    if (notesRow && notesRow.classList.contains('notes-row')) {
+                        notesRow.classList.remove('show');
+                    }
+                } else {
+                    // 選新的結果
+                    this.classList.add('active');
+                    item.classList.add('checked');
+                    cb.classList.add('checked');
+
+                    // 不合格才顯示備註欄
+                    if (notesRow && notesRow.classList.contains('notes-row')) {
+                        notesRow.classList.toggle('show', this.classList.contains('fail'));
+                    }
+
+                    // 移除紅框提示
+                    item.classList.remove('needs-result');
+
+                    // 若全部完成，清除警告訊息
+                    if (countWithResult() === TOTAL) {
+                        document.getElementById('validationMsg').classList.remove('show');
+                    }
                 }
 
-                // Auto-check the item
-                if (!item.classList.contains('checked')) {
-                    item.classList.add('checked');
-                    item.querySelector('.checkbox').classList.add('checked');
-                    updateProgress();
-                }
+                updateProgress();
             });
         });
     });
 
     updateProgress();
 
-    // Keyboard shortcut
-    document.addEventListener('keydown', e => {
-        if (e.ctrlKey && e.key === 'p') { e.preventDefault(); printChecklist(); }
+    // ── 欄位即時錯誤樣式 ──
+    ['projectName','contractor','checkDate','location','area','inspector'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => el.classList.remove('field-error'));
+        if (el) el.addEventListener('change', () => el.classList.remove('field-error'));
     });
+
+    // ── Validation ──
+    function validate() {
+        const errors = [];
+        let firstErrorEl = null;
+
+        // 基本資料欄位檢核
+        const metaFields = [
+            { id: 'projectName', label: '工程名稱' },
+            { id: 'contractor',  label: '施工廠商' },
+            { id: 'checkDate',   label: '檢查日期' },
+            { id: 'location',    label: '作業位置（樓層）' },
+            { id: 'area',        label: '作業區域' },
+        ];
+
+        metaFields.forEach(f => {
+            const el = document.getElementById(f.id);
+            const val = el ? el.value.trim() : '';
+            if (!val) {
+                errors.push('【' + f.label + '】');
+                if (el) {
+                    el.classList.add('field-error');
+                    if (!firstErrorEl) firstErrorEl = el;
+                }
+            } else {
+                if (el) el.classList.remove('field-error');
+            }
+        });
+
+        if (errors.length > 0) {
+            showValidation('⚠️ 請填寫以下必填欄位：' + errors.join('、') + '。');
+            if (firstErrorEl) {
+                firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstErrorEl.focus();
+            }
+            return false;
+        }
+
+        // 檢查人員
+        const inspector = document.getElementById('inspector').value.trim();
+        if (!inspector) {
+            showValidation('⚠️ 請填寫【檢查人員】姓名。');
+            const el = document.getElementById('inspector');
+            el.classList.add('field-error');
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.focus();
+            return false;
+        }
+        document.getElementById('inspector').classList.remove('field-error');
+
+        // 手寫簽名
+        if (!hasSignature) {
+            showValidation('⚠️ 請在簽名欄位完成【手寫簽名】。');
+            document.getElementById('signaturePad').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
+        }
+
+        // 12項結果檢核
+        const missing = [];
+        document.querySelectorAll('.checklist-item').forEach(item => {
+            const active = item.querySelector('.rbtn.active');
+            if (!active) {
+                missing.push(item.dataset.id);
+                item.classList.add('needs-result');
+            } else {
+                item.classList.remove('needs-result');
+            }
+        });
+
+        if (missing.length > 0) {
+            showValidation('⚠️ 以下 ' + missing.length + ' 個項目尚未選擇結果（✓ 合格 / ✗ 不合格 / ／ 無此項）：<br>項目編號：' + missing.join('、') + '。<br>請找到紅框標示的項目並完成選擇。');
+            const firstMissing = document.querySelector('.checklist-item.needs-result');
+            if (firstMissing) firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
+        }
+
+        document.getElementById('validationMsg').classList.remove('show');
+        return true;
+    }
+
+    function showValidation(msg) {
+        const el = document.getElementById('validationMsg');
+        el.innerHTML = msg;
+        el.classList.add('show');
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function printChecklist() {
+        if (!validate()) return;
+        window.print();
+    }
 
     // ── Signature Pad ──
     const canvas = document.getElementById('signaturePad');
@@ -804,82 +977,114 @@
     function resizeCanvas() {
         const rect = canvas.getBoundingClientRect();
         const tmp = canvas.toDataURL();
-        canvas.width = rect.width; canvas.height = rect.height;
+        canvas.width = Math.max(rect.width, 200);
+        canvas.height = Math.max(rect.height, 120);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         const img = new Image();
         img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         img.src = tmp;
     }
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', () => { setTimeout(resizeCanvas, 100); });
 
     function getPoint(e) {
         const r = canvas.getBoundingClientRect();
+        if (e.touches) {
+            return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top };
+        }
         return { x: e.clientX - r.left, y: e.clientY - r.top };
     }
-    function lockScroll(lock) {
-        document.body.style.overflow = lock ? 'hidden' : '';
-        document.documentElement.style.overflow = lock ? 'hidden' : '';
-    }
+
     function startDraw(e) {
-        e.preventDefault(); drawing = true; lockScroll(true);
-        const p = getPoint(e); lastX = p.x; lastY = p.y;
+        e.preventDefault();
+        drawing = true;
+        const p = getPoint(e);
+        lastX = p.x; lastY = p.y;
         ctx.beginPath(); ctx.moveTo(lastX, lastY);
-        if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+        if (canvas.setPointerCapture && e.pointerId !== undefined) {
+            try { canvas.setPointerCapture(e.pointerId); } catch(err) {}
+        }
     }
     function draw(e) {
-        if (!drawing) return; e.preventDefault();
+        if (!drawing) return;
+        e.preventDefault();
         const p = getPoint(e);
         ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y);
-        ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
+        ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
         ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
         lastX = p.x; lastY = p.y; hasSignature = true;
     }
     function endDraw(e) {
-        if (!drawing) return; drawing = false; lockScroll(false);
-        if (canvas.releasePointerCapture) { try { canvas.releasePointerCapture(e.pointerId); } catch(err){} }
+        if (!drawing) return;
+        drawing = false;
+        if (canvas.releasePointerCapture && e.pointerId !== undefined) {
+            try { canvas.releasePointerCapture(e.pointerId); } catch(err) {}
+        }
     }
+
+    // Pointer events (desktop + touch)
     canvas.addEventListener('pointerdown', startDraw);
     canvas.addEventListener('pointermove', draw);
     canvas.addEventListener('pointerup', endDraw);
     canvas.addEventListener('pointercancel', endDraw);
     canvas.addEventListener('pointerleave', endDraw);
 
-    function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); hasSignature = false; }
+    // Touch events fallback for older mobile
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', endDraw);
+    canvas.addEventListener('touchcancel', endDraw);
 
-    function validate() {
-        const inspector = document.getElementById('inspector').value.trim();
-        if (!inspector) { alert('請填寫檢查人員姓名'); document.getElementById('inspector').focus(); return false; }
-        if (!hasSignature) { alert('請先手寫簽名'); return false; }
-        return true;
-    }
-
-    function printChecklist() {
-        if (!validate()) return;
-        window.print();
+    function clearSignature() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        hasSignature = false;
     }
 
     async function savePDF() {
         if (!validate()) return;
         const { jsPDF } = window.jspdf;
         const btns = document.querySelectorAll('.print-btn');
+        const validMsg = document.getElementById('validationMsg');
         btns.forEach(b => b.style.display = 'none');
+        validMsg.style.display = 'none';
         try {
-            const snap = await html2canvas(document.querySelector('.container'), { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+            const snap = await html2canvas(document.querySelector('.container'), {
+                scale: 2, useCORS: true, backgroundColor: '#ffffff',
+                ignoreElements: el => el.id === 'validationMsg'
+            });
             const img = snap.toDataURL('image/png');
-            const pdf = new jsPDF('p','mm','a4');
+            const pdf = new jsPDF('p', 'mm', 'a4');
             const pw = 210, ph = 297;
             const iw = pw - 10;
             const ih = snap.height * iw / snap.width;
             let left = ih, pos = 5;
             pdf.addImage(img, 'PNG', 5, pos, iw, ih);
             left -= (ph - 10);
-            while (left > 0) { pos = left - ih + 5; pdf.addPage(); pdf.addImage(img, 'PNG', 5, pos, iw, ih); left -= (ph - 10); }
+            while (left > 0) {
+                pos = left - ih + 5;
+                pdf.addPage();
+                pdf.addImage(img, 'PNG', 5, pos, iw, ih);
+                left -= (ph - 10);
+            }
             const inspector = document.getElementById('inspector').value || '簽名人';
             const date = document.getElementById('checkDate').value || '日期';
             pdf.save(`FY-1A007_施工架檢查表_${inspector}_${date}.pdf`);
-        } catch(err) { console.error(err); alert('PDF 產生失敗，請稍後再試'); }
-        finally { btns.forEach(b => b.style.display = ''); }
+        } catch(err) {
+            console.error(err);
+            alert('PDF 產生失敗，請稍後再試');
+        } finally {
+            btns.forEach(b => b.style.display = '');
+            validMsg.style.display = '';
+        }
     }
+
+    // Keyboard shortcut
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key === 'p') { e.preventDefault(); printChecklist(); }
+    });
 </script>
 </body>
 </html>
