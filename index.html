@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -151,7 +153,7 @@
 
 <div class="layout">
     <header class="header">
-        <h1>檢查表系統</h1>
+        <h1>職安檢查表系統</h1>
         <p></p>
     </header>
 
@@ -159,10 +161,10 @@
         <aside class="sidebar">
             <h2>檢查表選單</h2>
             <ul class="menu">
-                <li><button class="active" onclick="loadChecklist('施工架', 'FY-1A007_施工架.html', this)">施工架組拆作業</button></li>
-                <li><button onclick="loadChecklist('停 想 動', 'FY-BBB.html', this)">停 想 動</button></li>
-                <li><button onclick="loadChecklist('檢查表 3', 'checklist3.html', this)">檢查表 3</button></li>
-                <li><button onclick="loadChecklist('檢查表 4', 'checklist4.html', this)">檢查表 4</button></li>
+                <li><button class="active" onclick="loadChecklist('停 想 動 檢查表', 'FY-StopThinkMove.html', this)">停 想 動 檢查表</button></li>
+                <li><button onclick="loadChecklist('施工架組拆作業檢查表', 'FY-1A007_施工架.html', this)">施工架組拆作業檢查表</button></li>
+                <li><button onclick="loadChecklist('氧乙炔作業檢查表', 'FY-1B015_氧乙炔.html', this)">氧乙炔作業檢查表</button></li>
+                <li><button onclick="loadChecklist('固定式起重機檢查表', 'FY-1C003_固定式起重機.html', this)">固定式起重機檢查表</button></li>
                 <li><button onclick="loadChecklist('檢查表 5', 'checklist5.html', this)">檢查表 5</button></li>
                 <li><button onclick="loadChecklist('檢查表 6', 'checklist6.html', this)">檢查表 6</button></li>
                 <li><button onclick="loadChecklist('檢查表 7', 'checklist7.html', this)">檢查表 7</button></li>
@@ -178,7 +180,7 @@
                 <p> 職安檢查表</p>
             </div>
 
-            <iframe id="contentFrame" class="content-frame" src="FY-1A007_施工架.html"></iframe>
+            <iframe id="contentFrame" class="content-frame" src="FY-StopThinkMove.html"></iframe>
         </section>
     </main>
 </div>
